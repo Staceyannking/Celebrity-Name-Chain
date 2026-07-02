@@ -1,10 +1,16 @@
 import "dotenv/config";
 import express from "express";
 
+import answersRouter from "./routes/answers.js";
+
+
 const app = express();
 app.use(express.json());
 
 const PORT = process.env.PORT ?? 3000;
+
+// routes
+app.use("/answers", answersRouter);
 
 // Health check — confirms the server is running.
 app.get("/health", (_req, res) => {
