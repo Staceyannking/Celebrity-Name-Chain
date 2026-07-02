@@ -1,30 +1,59 @@
-import "dotenv/config";
 import express from "express";
+import { PrismaClient } from "./generated/prisma/client.js";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-import answersRouter from "./routes/answers.js";
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+const prisma = new PrismaClient({ adapter });
 
 
 const app = express();
+
 app.use(express.json());
 
-const PORT = process.env.PORT ?? 3000;
 
-// routes
-app.use("/answers", answersRouter);
+//--------------- functions to database-----------------
+const createGame = async (roomCode: string, celebrityName: string) => {
+  try {
+    return await prisma.game.create({
+      data: {
+        roomCode: roomCode,
+        celebrityName: celebrityName
+      }
+    })
+  } catch (error) {
+    console.log("Failed to insert answer ", error);
+  }
+}
 
-// Health check — confirms the server is running.
-app.get("/health", (_req, res) => {
-  res.json({ ok: true });
+const PORT = 3000;
+
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to the Celebrity Name Chain API!" });
 });
 
-// TODO: implement the game routes (see the project spec):
-//   POST /games          { roomCode, celebrity }          -> start a game
-//   GET  /games/:roomCode                                 -> most recent celebrity name
-//   POST /answers        { roomCode, username, answer }   -> submit an answer
-//
-// To talk to the database, run `yarn prisma:migrate` first (generates the
-// client into src/generated/prisma), then wire it up with the pg adapter.
-// See this API's README ("Using Prisma in code") for the exact db.ts snippet.
+app.post("/games", async (req, res) => {
+  try {
+
+    const { roomCode, celebrityName } = req.body;
+    console.log(roomCode, celebrityName);
+    if (!roomCode || roomCode === "") {
+      console.log("room code is empty or null...");
+      return res.status(400).json({ message: "please enter valid room code" })
+    }
+    if (!celebrityName || celebrityName === "") {
+      console.log("celebrity name is empty or null...");
+      return res.status(400).json({ message: "please enter valid celebrity name" })
+    }
+
+    const newGame = await createGame(roomCode, celebrityName);
+    console.log (newGame);
+    // return res.status(201).json({ message: "game created successfully", game: newGame });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "internal server error." });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`API listening on http://localhost:${PORT}`);
