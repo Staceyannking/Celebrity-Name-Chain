@@ -1,3 +1,4 @@
+import "dotenv/config"
 import express from "express";
 import { PrismaClient } from "./generated/prisma/client.js";
 import { PrismaPg } from "@prisma/adapter-pg";
@@ -38,16 +39,16 @@ app.post("/games", async (req, res) => {
     console.log(roomCode, celebrityName);
     if (!roomCode || roomCode === "") {
       console.log("room code is empty or null...");
-      return res.status(400).json({ message: "please enter valid room code" })
+      return res.status(400).json({ message: "please enter valid room code" });
     }
     if (!celebrityName || celebrityName === "") {
       console.log("celebrity name is empty or null...");
-      return res.status(400).json({ message: "please enter valid celebrity name" })
+      return res.status(400).json({ message: "please enter valid celebrity name" });
     }
 
     const newGame = await createGame(roomCode, celebrityName);
     console.log (newGame);
-    // return res.status(201).json({ message: "game created successfully", game: newGame });
+  return res.status(201).json({ message: "game created successfully", game: newGame });
 
   } catch (error) {
     console.log(error);
