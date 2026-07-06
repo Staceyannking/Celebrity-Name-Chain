@@ -62,7 +62,11 @@ const Home = () => {
           <h1>{data?.message}</h1>
           <h2>Choose what you want to get started:</h2>
 
-          <IonCard button style={{ ...cardStyle, background: "#2D1E3B" }}>
+          <IonCard
+            button
+            style={{ ...cardStyle, background: "#2D1E3B" }}
+            routerLink="/creategame"
+          >
             <h4>Create A New Game Room</h4>
           </IonCard>
 
