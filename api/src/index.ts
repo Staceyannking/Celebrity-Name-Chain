@@ -1,8 +1,10 @@
 import express from "express";
 import postGamesRoute from "./routes/games.route.js";
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 const PORT = 3000;
 
 //------------------------------------ ROUTES ----------------------------------------
