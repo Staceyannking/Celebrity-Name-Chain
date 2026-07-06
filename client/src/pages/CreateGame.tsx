@@ -9,6 +9,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { useForm, Controller } from "react-hook-form";
+const API_URL = "http://localhost:3000/games";
 
 const CreateGame = () => {
   const { control, handleSubmit, reset } = useForm({
@@ -17,12 +18,29 @@ const CreateGame = () => {
       celebrityName: "",
     },
   });
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
-    reset({
-      roomCode: "",
-      celebrityName: "",
-    });
+    try {
+      const serverResponse = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const result = await serverResponse.json();
+      alert(result.message);
+      if (serverResponse.status === 201) {
+        console.log("Game created...");
+        reset({
+          roomCode: "",
+          celebrityName: "",
+        });
+      }
+    } catch (error) {
+      alert("Something went wrong. Please try again.");
+      console.log(error);
+    }
   };
 
   return (
