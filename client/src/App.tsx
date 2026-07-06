@@ -33,6 +33,7 @@ import "@ionic/react/css/palettes/dark.system.css";
 /* Theme variables */
 import "./theme/variables.css";
 import CreateGame from "./pages/CreateGame";
+import RetrievedGames from "./pages/RetrievedGames";
 
 setupIonicReact();
 
@@ -42,6 +43,7 @@ const App: React.FC = () => (
       <IonRouterOutlet>
         <Route exact path="/" component={Home} />
         <Route exact path="/creategame" component={CreateGame} />
+        <Route exact path = "/currentgame" component={RetrievedGames}/>
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
