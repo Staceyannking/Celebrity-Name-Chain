@@ -12,7 +12,7 @@ Create a Full-stack Celebrity Name chain game with **Ionic/React** client for _f
 The project should at least have the following minimum routes:
 
 1. _POST_ `"/games"` route: The user provides a valid `roomCode`, and beginning `celebrity_name` to create a new game record.
-2. _GET_ `"/games"` route: Returns all the games with their roomCodes and \*\*most recent answer for each game.
+2. _GET_ `"/currentGames"` route: Returns all the games with their roomCodes and \*\*most recent answer for each game.
 3. _GET_ `"/games/:roomCode"` route: Returns the most recent game for the specific provided `roomCode` if exists, otherwise the default celebrity name.
 4. _POST_ `"/answers"` route: Submits an answer to the specific game, where the user provides the `roomCode`, `username`, and `answer`.
 
@@ -45,6 +45,67 @@ model Answer {
 }
 ```
 
+2. Created the first home route `"/"` for showing the main home page and returning a custom message.
+
+3. Created the **POST** `"/games"` route with complete error checking and status code handling that communicated with _Prisma_ to write the new records in the game table.
+
+```js
+router.post("/", async (req, res) => {
+  try {
+    const { roomCode, celebrityName } = req.body;
+    console.log(roomCode, celebrityName);
+    const roomCodeError = varValidate(roomCode, "room code");
+    if (roomCodeError) {
+      console.log("room code is empty or null...");
+      return res.status(400).json({ message: roomCodeError });
+    }
+    const celebrityError = isInvalidCelebrityName(celebrityName);
+    if (celebrityError) {
+      console.log("celebrity name is empty or null...");
+      return res.status(400).json({
+        message: celebrityError,
+      });
+    }
+    const newGame = await createGame(roomCode, celebrityName);
+    console.log(newGame);
+    if (newGame.error) return res.status(400).json({ message: newGame.error });
+    return res
+      .status(201)
+      .json({ message: "Game created successfully...", game: newGame.data });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Please provide both roomCode and celebrityName fields.",
+    });
+  }
+});
+```
+
+4. Created the **GET** `"/currentGames"` route that retrieves the current games that already exist in the game table.
+
+```js
+app.get("/currentGames", async (req, res) => {
+  try {
+    const games = await gamesRecords();
+    if (!games || games.length === 0) {
+      console.log("games table is empty....");
+      return res.status(404).json({ message: "no games create yet..." });
+    }
+    res
+      .status(200)
+      .json({ message: "Retrieved games...", gamesRecords: games });
+  } catch (error) {
+    console.log("database server error.... ");
+    return res.status(500).json({ message: "internal server error.." });
+  }
+});
+```
+
+5. Created a main **Ionic/React** _Home Page_ that has card buttons that navigate to other pages.
+   ![HomePage](/images/HomePage.png)
+
+6. Connected the `"/"` home route, **POST** `"/games"` route and the **GET** `"/currentGames"` route to the frontend UI with **Ionic/React** to each `ion-card`.
+
 ---
 
 ### Cloning:
@@ -53,7 +114,38 @@ model Answer {
 
 1. For prisma and database syncing, cd inside `api` folder to have _Prisma_ dependencies visible.
 2. Run `yarn install` to load your _node_modules_.
-3. Copying the .env.example file in a new .env file by running the following in the terminal: `cp .env.example .env` and modify the _DATABASE_URL_ in the _.env_ file. **Make sure to change the password to your local password, and chagne the PORT number if you use another.**
+3. Copying the .env.example file in a new .env file by running the following in the terminal: `cp .env.example .env` and modify the _DATABASE_URL_ in the _.env_ file. **Make sure to change the password to your local password, and change the PORT number if you use another.**
 4. Run `yarn prisma:migrate` to connect with PostgreSQL on your machine and sync the _Prisma_ models with the database and generate the tables in PgAdmin.
+
+_Summarized commands_:
+
+```bash
+cd api
+yarn install
+cp .env.example .env #Change port and password accordingly
+yarn prisma:migrate
+```
+
+---
+
+#### B) For setting up the backend and frontend on your local machine:
+
+1. Open your terminal, cd inside the `api` folder -> (`cd api`). Then run the following:
+
+```bash
+yarn install
+yarn add cors
+# Once all is good with the packages
+yarn dev
+```
+
+2. Open another terminal and now cd inside `client` folder -> (`cd client`):
+   a| copy the _.env.example_ in a new _.env_ file : `cp .env.example .env`
+   b| run the following in the terminal:
+
+```bash
+  yarn install
+  yarn dev
+```
 
 ---

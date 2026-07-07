@@ -50,27 +50,37 @@ const RetrievedGames = () => {
         >
           {isLoading && <p> loading.....</p>}
 
-          {error && <p> couldn't rach the server</p>}
-          <h3>These are our currentgame:</h3>
+          {error && <p> couldn't reach the server</p>}
+          <h3>These are our current games:</h3>
           <br />
-          {/* <IonItem
-            style={{ width: "500px", display: "flex", textAlign: "center" }}
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
-            <IonLabel>roomCode | celebrity name</IonLabel>
-          </IonItem> */}
-          <IonList
-            style={{ width: "500px", display: "flex", textAlign: "center" }}
-          >
-            {data?.gamesRecords.map((game) => (
-              <IonList key={game.roomCode} >
-                <strong>{game.roomCode}</strong> {game.celebrityName} 
-              </IonList>
-            )
-              
-            )}
+            <IonList style={{ width: "500px" }}>
+              {data?.gamesRecords.map((game) => (
+                <IonItem
+                  key={game.roomCode}
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    textAlign: "left",
+                  }}
+                >
+                  <IonLabel>
+                    <strong>{game.roomCode}</strong> — {game.celebrityName}
+                  </IonLabel>
+                </IonItem>
+              ))}
             </IonList>
-            <br />
-            <IonButton color="warning" routerLink="/">
+          </div>
+          <br />
+          <IonButton color="warning" routerLink="/">
             Back To Home Page
           </IonButton>
         </IonContent>

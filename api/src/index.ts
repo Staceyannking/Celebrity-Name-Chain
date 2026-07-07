@@ -20,16 +20,16 @@ app.use("/answers", answerRoute);
 app.get("/currentGames", async (req, res) => {
   try {
     const games = await gamesRecords();
-    if(!games || Object.keys(games).length === 0){
+    if (!games || games.length === 0) {
       console.log("games table is empty....");
-      return res.status(404).json({message: "no games create yet..."});
+      return res.status(404).json({ message: "no games create yet..." });
     }
     res
       .status(200)
       .json({ message: "Retrieved games...", gamesRecords: games });
   } catch (error) {
     console.log("database server error.... ");
-    return res.status(500).json({message: "internal server error.."});
+    return res.status(500).json({ message: "internal server error.." });
   }
 });
 

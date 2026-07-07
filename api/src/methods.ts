@@ -49,9 +49,8 @@ const gamesRecords = async () => {
     return currentGames;
   } catch (error) {
     console.log("Failed to error...: ", error);
-    return error;
+    return null;
   }
 };
 
 export { varValidate, isInvalidCelebrityName, createGame, gamesRecords };
-
