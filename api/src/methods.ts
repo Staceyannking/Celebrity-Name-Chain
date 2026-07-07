@@ -53,4 +53,18 @@ const gamesRecords = async () => {
   }
 };
 
-export { varValidate, isInvalidCelebrityName, createGame, gamesRecords };
+const gameRecord = async (roomCode: string) => {
+  try {
+    console.log("retrieving game record....");
+    const currentGame = await prisma.game.findMany({
+      where: { roomCode: roomCode },
+    });
+    console.log(currentGame);
+    return currentGame;
+  } catch (error) {
+    console.log("failed to error:", error);
+    return null;
+  }
+};
+
+export { varValidate, isInvalidCelebrityName, createGame, gamesRecords, gameRecord };

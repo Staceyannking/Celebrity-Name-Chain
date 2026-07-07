@@ -2,7 +2,7 @@ import express from "express";
 import postGamesRoute from "./routes/games.route.js";
 import answerRoute from "./routes/answers.route.js";
 import cors from "cors";
-import { gamesRecords } from "./methods.js";
+import { gamesRecords, gameRecord, varValidate } from "./methods.js";
 
 const app = express();
 app.use(express.json());
@@ -31,6 +31,20 @@ app.get("/currentGames", async (req, res) => {
     console.log("database server error.... ");
     return res.status(500).json({ message: "internal server error.." });
   }
+});
+
+app.get("/game/:roomCode", async (req, res) => {
+  try {
+    const roomCodeID = req.params.roomCode;
+    console.log(roomCodeID);
+    const roomCodeError = varValidate(roomCodeID, "roomCode");
+    if (roomCodeError) {
+      console.log("room code is empty or null...");
+      return res.status(400).json({ message: roomCodeError });
+    }
+
+    const gameObject = await gameRecord(roomCodeID);
+  } catch (error) {}
 });
 
 app.listen(PORT, () => {
