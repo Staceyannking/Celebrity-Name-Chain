@@ -60,6 +60,12 @@ const gameRecord = async (roomCode: string) => {
       where: { roomCode: roomCode },
     });
     console.log(currentGame);
+    if (currentGame.length === 0) {
+      console.log("Game not found...");
+      return {
+        message: "Game code does not exist, please create a game first.",
+      };
+    }
     return currentGame;
   } catch (error) {
     console.log("failed to error:", error);
@@ -67,4 +73,10 @@ const gameRecord = async (roomCode: string) => {
   }
 };
 
-export { varValidate, isInvalidCelebrityName, createGame, gamesRecords, gameRecord };
+export {
+  varValidate,
+  isInvalidCelebrityName,
+  createGame,
+  gamesRecords,
+  gameRecord,
+};

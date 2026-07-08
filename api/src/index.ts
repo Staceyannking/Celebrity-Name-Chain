@@ -39,12 +39,15 @@ app.get("/game/:roomCode", async (req, res) => {
     console.log(roomCodeID);
     const roomCodeError = varValidate(roomCodeID, "roomCode");
     if (roomCodeError) {
-      console.log("room code is empty or null...");
+      console.log("Error: ", roomCodeError);
       return res.status(400).json({ message: roomCodeError });
     }
-
     const gameObject = await gameRecord(roomCodeID);
-  } catch (error) {}
+    console.log("retrieved game: ", gameObject);
+    return res.status(200).json({ game: gameObject });
+  } catch (error) {
+    console.log("database server error...");
+  }
 });
 
 app.listen(PORT, () => {
