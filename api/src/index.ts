@@ -2,7 +2,12 @@ import express from "express";
 import postGamesRoute from "./routes/games.route.js";
 import answerRoute from "./routes/answers.route.js";
 import cors from "cors";
-import { gamesRecords, gameRecord, varValidate } from "./methods.js";
+import {
+  gamesRecords,
+  gameRecord,
+  varValidate,
+  answersRecords,
+} from "./methods.js";
 
 const app = express();
 app.use(express.json());
@@ -16,6 +21,7 @@ app.get("/", (req, res) => {
 
 app.use("/games", postGamesRoute);
 app.use("/answers", answerRoute);
+app.use("/answer", answerRoute);
 
 app.get("/currentGames", async (req, res) => {
   try {
@@ -47,6 +53,18 @@ app.get("/game/:roomCode", async (req, res) => {
     return res.status(404).json(gameObject);
   }
   return res.status(200).json(gameObject);
+});
+
+app.get("answerslist/:roomCode", async (req, res) => {
+  const roomCodeID = req.params.roomCode;
+  console.log(roomCodeID);
+  // const answers = await answersRecords(roomCodeID);
+  // console.log("Retrieved previous answers: ", answers);
+  // if (!answers || answers.length === 0) {
+  //   console.log("Empty retrieved answer object...");
+  //   return res.send("No answers posted yet...");
+  // }
+  // return res.json(answers);
 });
 
 app.listen(PORT, () => {
