@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { PrismaClient } from "./generated/prisma/client.js";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { error } from "console";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -74,10 +75,75 @@ const gameRecord = async (roomCode: string) => {
   }
 };
 
+const findRoom = async (roomCode: string) => {
+  return await prisma.game.findUnique({
+    where: { roomCode },
+  });
+};
+
+const findAnswer = async (roomCode: string, answer: string) => {
+  return await prisma.answer.findUnique({
+    where: {
+      roomCodeID_answer: {
+        roomCodeID: roomCode,
+        answer: answer.trim(),
+      },
+    },
+  });
+};
+
+const retrieveLastAnswer = async (roomCode: string) => {
+  return await prisma.answer.findFirst({
+    where: { roomCodeID: roomCode },
+    orderBy: { createdAt: "desc" },
+  });
+};
+
+const createAnswer = async (
+  roomCode: string,
+  username: string,
+  answer: string,
+) => {
+  return await prisma.answer.create({
+    data: {
+      roomCodeID: roomCode,
+      username,
+      answer: answer.trim(),
+    },
+  });
+};
+
+const updateCelebrityName = async (roomCode: string, answer: string) => {
+  return await prisma.game.update({
+    where: { roomCode },
+    data: { celebrityName: answer.trim() },
+  });
+};
+
+const answersRecords = async (roomCode: string) => {
+  try {
+    const answers = await prisma.answer.findMany({
+      where: { roomCodeID: roomCode },
+      orderBy: { createdAt: "asc" },
+    });
+    console.log(answers);
+    return { error: null, data: answers };
+  } catch (error) {
+    console.log("prisma error");
+    return { error: error, data: null };
+  }
+};
+
 export {
   varValidate,
   isInvalidCelebrityName,
   createGame,
   gamesRecords,
   gameRecord,
+  findRoom,
+  findAnswer,
+  retrieveLastAnswer,
+  createAnswer,
+  updateCelebrityName,
+  answersRecords,
 };
