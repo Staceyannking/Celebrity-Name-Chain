@@ -27,7 +27,7 @@ const CreateAnswer = () => {
     queryKey: ["answers", roomCode],
     queryFn: async () => {
       if (!roomCode) return [];
-      const res = await fetch(`http://localhost:3000/answers/${roomCode}`);
+      const res = await fetch(`http://localhost:3000/answerslist/${roomCode}`);
       return res.json();
     },
     enabled: !!roomCode,
@@ -36,7 +36,7 @@ const CreateAnswer = () => {
   // POST new answer
   const mutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch(`http://localhost:3000/answers`, {
+      const res = await fetch(`http://localhost:3000/answer`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ roomCode, username, answer }),
@@ -136,7 +136,7 @@ const CreateAnswer = () => {
 
           {/* ANSWERS LIST */}
           <IonList style={{ width: "500px" }}>
-            {answersData?.map((a) => (
+            {answersData?.data.map((a) => (
               <IonItem key={a.id}>
                 <IonLabel>
                   <IonText>

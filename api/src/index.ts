@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/games", postGamesRoute);
-app.use("/answers", answerRoute);
+// app.use("/answers", answerRoute);
 app.use("/answer", answerRoute);
 
 app.get("/currentGames", async (req, res) => {
@@ -55,16 +55,16 @@ app.get("/game/:roomCode", async (req, res) => {
   return res.status(200).json(gameObject);
 });
 
-app.get("answerslist/:roomCode", async (req, res) => {
+app.get("/answerslist/:roomCode", async (req, res) => {
   const roomCodeID = req.params.roomCode;
   console.log(roomCodeID);
-  // const answers = await answersRecords(roomCodeID);
-  // console.log("Retrieved previous answers: ", answers);
-  // if (!answers || answers.length === 0) {
-  //   console.log("Empty retrieved answer object...");
-  //   return res.send("No answers posted yet...");
-  // }
-  // return res.json(answers);
+  const answers = await answersRecords(roomCodeID);
+  console.log("Retrieved previous answers: ", answers);
+  if (!answers) {
+    console.log("Empty retrieved answer object...");
+    return res.send("No answers posted yet...");
+  }
+  return res.json(answers);
 });
 
 app.listen(PORT, () => {

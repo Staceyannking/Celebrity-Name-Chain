@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { PrismaClient } from "./generated/prisma/client.js";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { error } from "console";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -120,10 +121,17 @@ const updateCelebrityName = async (roomCode: string, answer: string) => {
 };
 
 const answersRecords = async (roomCode: string) => {
-  return await prisma.answer.findMany({
-    where: { roomCodeID: roomCode },
-    orderBy: { createdAt: "asc" },
-  });
+  try {
+    const answers = await prisma.answer.findMany({
+      where: { roomCodeID: roomCode },
+      orderBy: { createdAt: "asc" },
+    });
+    console.log(answers);
+    return { error: null, data: answers };
+  } catch (error) {
+    console.log("prisma error");
+    return { error: error, data: null };
+  }
 };
 
 export {
