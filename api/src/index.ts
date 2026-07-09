@@ -29,25 +29,24 @@ app.get("/currentGames", async (req, res) => {
       .json({ message: "Retrieved games...", gamesRecords: games });
   } catch (error) {
     console.log("database server error.... ");
-    return res.status(500).json({ message: "internal server error.." });
+    return res.status(500);
   }
 });
 
 app.get("/game/:roomCode", async (req, res) => {
-  try {
-    const roomCodeID = req.params.roomCode;
-    console.log(roomCodeID);
-    const roomCodeError = varValidate(roomCodeID, "roomCode");
-    if (roomCodeError) {
-      console.log("Error: ", roomCodeError);
-      return res.status(400).json({ message: roomCodeError });
-    }
-    const gameObject = await gameRecord(roomCodeID);
-    console.log("retrieved game: ", gameObject);
-    return res.status(200).json({ game: gameObject });
-  } catch (error) {
-    console.log("database server error...");
+  const roomCodeID = req.params.roomCode;
+  console.log(roomCodeID);
+  const roomCodeError = varValidate(roomCodeID, "roomCode");
+  if (roomCodeError) {
+    console.log("Error: ", roomCodeError);
+    return res.status(400).json({ error: roomCodeError, data: null });
   }
+  const gameObject = await gameRecord(roomCodeID);
+  console.log("retrieved game: ", gameObject);
+  if (gameObject.error) {
+    return res.status(404).json(gameObject);
+  }
+  return res.status(200).json(gameObject);
 });
 
 app.listen(PORT, () => {

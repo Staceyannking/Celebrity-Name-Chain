@@ -56,20 +56,21 @@ const gamesRecords = async () => {
 const gameRecord = async (roomCode: string) => {
   try {
     console.log("retrieving game record....");
-    const currentGame = await prisma.game.findMany({
+    const currentGame = await prisma.game.findUnique({
       where: { roomCode: roomCode },
     });
     console.log(currentGame);
-    if (currentGame.length === 0) {
-      console.log("Game not found...");
+    if (!currentGame) {
+      console.log("Game does not exist...");
       return {
-        message: "Game code does not exist, please create a game first.",
+        error: "Game code does not exist, please create a game first..",
+        data: null,
       };
     }
-    return currentGame;
+    return { error: null, data: currentGame };
   } catch (error) {
     console.log("failed to error:", error);
-    return null;
+    return { error: "Database error occured.", data: null };
   }
 };
 
