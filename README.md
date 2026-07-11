@@ -107,6 +107,24 @@ app.get("/currentGames", async (req, res) => {
 6. Connected the `"/"` home route, **POST** `"/games"` route and the **GET** `"/currentGames"` route to the frontend UI with **Ionic/React** to each `ion-card`.
 
 ---
+7. Created the **POST** `"/answer"` route that allows users to submit answers for a specific game. The route validates the request, stores answers in the database, updates the celebrity name, and handles different error cases with appropriate status codes. We also created the React/Ionic UI connection that communicates with this route and displays the submitted answers.
+
+8. Created the **GET** `"/answerslist/:roomCode"` route that retrieves all submitted answers for a specific room code. This route is connected with the Ionic React frontend to display the answer list for each game.
+
+```ts
+app.get("/answerslist/:roomCode", async (req, res) => {
+  const roomCodeID = req.params.roomCode;
+
+  const answers = await answersRecords(roomCodeID);
+
+  if (!answers) {
+    return res.send("No answers posted yet...");
+  }
+
+  return res.json(answers);
+});
+
+9. Created reusable methods in the `methods.ts` file using Prisma to handle database operations. These methods are used to create, retrieve, and update game and answer data across the API routes.
 
 ### Cloning:
 
