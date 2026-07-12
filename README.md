@@ -3,7 +3,7 @@
 ### Collaborators:
 
 1.  Stacey Ann [Staceyannking (Staceyann king)](https://github.com/Staceyannking)
-2.  Prayash
+2.  Prayash [CyberAsec1](https://github.com/CyberAsec1)
 3.  Yasmine Mohamed [YasmineRaef (Yasmine_Raef_M.)](https://github.com/YasmineRaef)
 
 ### Template and Project:
@@ -106,7 +106,6 @@ app.get("/currentGames", async (req, res) => {
 
 6. Connected the `"/"` home route, **POST** `"/games"` route and the **GET** `"/currentGames"` route to the frontend UI with **Ionic/React** to each `ion-card`.
 
----
 7. Created the **POST** `"/answer"` route that allows users to submit answers for a specific game. The route validates the request, stores answers in the database, updates the celebrity name, and handles different error cases with appropriate status codes. We also created the React/Ionic UI connection that communicates with this route and displays the submitted answers.
 
 8. Created the **GET** `"/answerslist/:roomCode"` route that retrieves all submitted answers for a specific room code. This route is connected with the Ionic React frontend to display the answer list for each game.
@@ -123,10 +122,13 @@ app.get("/answerslist/:roomCode", async (req, res) => {
 
   return res.json(answers);
 });
+```
 
 9. Created reusable methods in the `methods.ts` file using Prisma to handle database operations. These methods are used to create, retrieve, and update game and answer data across the API routes.
 
-### Cloning:
+10. Tested our backend routes hosting our local version on **Ngrok** using `ngrok http 3000`.
+
+### Cloning & Environment settup:
 
 #### A) For Prisma migrations:
 
@@ -151,10 +153,11 @@ yarn prisma:migrate
 1. Open your terminal, cd inside the `api` folder -> (`cd api`). Then run the following:
 
 ```bash
-yarn install
-yarn add cors
-# Once all is good with the packages
-yarn dev
+  cd api
+  yarn install
+  yarn add cors
+  # Once all is good with the packages
+  yarn dev
 ```
 
 2. Open another terminal and now cd inside `client` folder -> (`cd client`):
@@ -162,8 +165,9 @@ yarn dev
    b| run the following in the terminal:
 
 ```bash
+  cd client
   yarn install
   yarn dev
 ```
 
----
+## --> Now, you should be able to go to `http://localhost:5173/` and see the home page for the routes.
